@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natalia Pericás López — Filmmaker & Fotografía</title>
+<meta name="description" content="Portfolio de dirección de fotografía, filmmaking y fotografía.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===================== TOKENS ===================== */
+  :root{
+    --bg:        #0b0c0a;
+    --bg-elev:   #151611;
+    --ink:       #f3f1ea;
+    --ink-dim:   #8c8c85;
+    --rule:      #262720;
+    --orange:    #ff6b35; /* luces — color grade warm */
+    --teal:      #2f6f6a; /* sombras — color grade cool */
+    --display:   'Bebas Neue', sans-serif;
+    --mono:      'IBM Plex Mono', monospace;
+    --body:      'IBM Plex Sans', sans-serif;
+    --rail-w:    28px;
+    --ease:      cubic-bezier(.16,1,.3,1);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ background:var(--bg); scroll-behavior:smooth; }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:var(--body); font-weight:300;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; }
+  ::selection{ background:var(--orange); color:#0b0c0a; }
+
+  :focus-visible{ outline:2px solid var(--orange); outline-offset:3px; }
+
+  /* grano de película, sutil, sobre toda la página */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:2; pointer-events:none;
+    opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* raíles de sprocket — solo escritorio */
+  .rail{
+    position:fixed; top:0; bottom:0; width:var(--rail-w);
+    background-color:#050504;
+    background-image:radial-gradient(circle at 50% 17px, var(--bg) 6px, transparent 7px);
+    background-size:100% 34px;
+    z-index:1; pointer-events:none;
+    display:none;
+  }
+  .rail.left{ left:0; } .rail.right{ right:0; }
+
+  @media (min-width:1100px){
+    .rail{ display:block; }
+    .page{ padding:0 var(--rail-w); }
+  }
+
+  .page{ position:relative; z-index:3; }
+
+  /* ===================== HEADER ===================== */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 6%;
+    background:linear-gradient(to bottom, rgba(11,12,10,.9), transparent);
+  }
+  @media (min-width:1100px){ header{ padding:22px calc(6% + var(--rail-w)); } }
+
+  .logo{ font-family:var(--display); font-size:1.4rem; letter-spacing:1px; }
+
+  .timecode{
+    font-family:var(--mono); font-size:.78rem; color:var(--ink-dim);
+    letter-spacing:1px; display:flex; align-items:center; gap:8px;
+  }
+  .timecode .dot{
+    width:7px; height:7px; border-radius:50%; background:var(--orange);
+    animation:blink 1.6s infinite;
+  }
+  @media (max-width:700px){ .timecode{ display:none; } }
+
+  nav{ display:flex; gap:28px; }
+  nav a{
+    font-family:var(--mono); font-size:.78rem; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--ink-dim); position:relative; padding-bottom:4px;
+  }
+  nav a::after{
+    content:""; position:absolute; left:0; bottom:0; height:1px; width:0;
+    background:var(--orange); transition:width .3s var(--ease);
+  }
+  nav a:hover, nav a.active{ color:var(--ink); }
+  nav a.active::after{ width:100%; }
+
+  /* ===================== HERO ===================== */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    padding:0 6%; position:relative;
+  }
+  @media (min-width:1100px){ .hero{ padding:0 calc(6% + var(--rail-w)); } }
+
+  .hero .eyebrow{
+    font-family:var(--mono); font-size:.8rem; letter-spacing:3px;
+    color:var(--orange); text-transform:uppercase; margin-bottom:18px;
+  }
+  .hero h1{
+    font-family:var(--display); font-weight:400;
+    font-size:clamp(3.2rem, 13vw, 9rem); line-height:.88; letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .hero h1 .dim{ color:var(--ink-dim); }
+  .hero .role{
+    margin-top:26px; font-family:var(--mono); font-size:.95rem;
+    letter-spacing:2px; text-transform:uppercase; color:var(--ink-dim);
+  }
+
+  .viewfinder{
+    position:absolute; inset:40px 6% auto auto; width:56px; height:56px;
+    pointer-events:none; display:none;
+  }
+  @media (min-width:1100px){ .viewfinder{ display:block; right:calc(6% + var(--rail-w)); } }
+  .viewfinder span{ position:absolute; width:16px; height:16px; border:1px solid var(--ink-dim); }
+  .viewfinder .tl{ top:0; left:0; border-right:none; border-bottom:none; }
+  .viewfinder .tr{ top:0; right:0; border-left:none; border-bottom:none; }
+  .viewfinder .bl{ bottom:0; left:0; border-right:none; border-top:none; }
+  .viewfinder .br{ bottom:0; right:0; border-left:none; border-top:none; }
+
+  .scroll-cue{
+    position:absolute; bottom:46px; left:6%;
+    font-family:var(--mono); font-size:.75rem; letter-spacing:2px;
+    text-transform:uppercase; color:var(--ink-dim);
+    display:flex; align-items:center; gap:10px;
+  }
+  @media (min-width:1100px){ .scroll-cue{ left:calc(6% + var(--rail-w)); } }
+  .scroll-cue::after{ content:"↓"; animation:pulse 2s infinite; }
+
+  /* ===================== SECCIÓN GENÉRICA ===================== */
+  section{ padding:110px 6%; position:relative; }
+  @media (min-width:1100px){ section{ padding:110px calc(6% + var(--rail-w)); } }
+
+  .section-head{
+    display:flex; align-items:baseline; gap:18px; margin-bottom:56px;
+    border-bottom:1px solid var(--rule); padding-bottom:20px;
+  }
+  .section-head h2{
+    font-family:var(--display); font-size:clamp(1.8rem,4vw,2.6rem);
+    text-transform:uppercase; letter-spacing:1px; font-weight:400;
+  }
+  .section-head .count{ font-family:var(--mono); font-size:.8rem; color:var(--ink-dim); }
+
+  /* ===================== GRID DE TRABAJOS (contact sheet) ===================== */
+  .grid{
+    display:grid; grid-template-columns:1fr; gap:3px;
+  }
+  .photo-grid{ margin-top:56px; }
+  .frame{
+    position:relative; overflow:hidden; background:var(--bg-elev);
+  }
+  /* proporción real de cada pieza: los vídeos de YouTube son 16:9 nativos
+     (así el iframe llena el hueco exacto, sin barras negras al reproducir);
+     las fotos horizontales respetan el 3:2 real de la cámara,
+     la vertical del mercado respeta su propio encuadre real */
+  .frame-video{ aspect-ratio:16/9; }
+  .frame-photo-wide{ aspect-ratio:3/2; }
+  .frame-photo-tall{ aspect-ratio:2660/4218; }
+  .frame-photo-wide, .frame-photo-tall{ cursor:zoom-in; }
+
+  @media (min-width:600px){
+    .grid{ grid-template-columns:repeat(2,1fr); }
+    .frame-photo-tall{ grid-column:1; grid-row:span 2; aspect-ratio:auto; }
+  }
+
+  .frame img{
+    width:100%; height:100%; object-fit:cover;
+    filter:grayscale(30%) contrast(1.02);
+  }
+
+  .expand-hint{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:52px; height:52px; border-radius:50%; border:1px solid var(--ink-dim);
+    background:rgba(11,12,10,.45); display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .35s var(--ease), border-color .3s; pointer-events:none;
+  }
+  .frame:hover .expand-hint{ opacity:1; border-color:var(--orange); }
+  .expand-hint svg{ width:16px; height:16px; stroke:var(--ink); fill:none; stroke-width:2; }
+
+  .reel-tag{
+    position:absolute; top:16px; left:16px; z-index:2;
+    font-family:var(--mono); font-size:.7rem; letter-spacing:1.5px;
+    color:var(--ink); background:rgba(11,12,10,.55); padding:5px 9px;
+    backdrop-filter:blur(3px);
+  }
+  .reel-meta{
+    position:absolute; top:16px; right:16px; z-index:2;
+    font-family:var(--mono); font-size:.7rem; color:var(--ink-dim);
+    background:rgba(11,12,10,.55); padding:5px 9px; backdrop-filter:blur(3px);
+  }
+
+  .frame-caption{
+    position:absolute; left:16px; right:16px; bottom:14px; z-index:2;
+    transform:translateY(10px); opacity:0;
+    transition:transform .45s var(--ease), opacity .45s var(--ease);
+  }
+  .frame:hover .frame-caption{ transform:translateY(0); opacity:1; }
+  .frame-caption .t{ font-size:1rem; font-weight:400; }
+  .frame-caption .c{
+    font-family:var(--mono); font-size:.7rem; color:var(--ink-dim);
+    text-transform:uppercase; letter-spacing:1px;
+  }
+
+  /* fachada de vídeo (click-to-play) */
+  .video-facade{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 50% 40%, #1c1d17, #0b0c0a 75%);
+  }
+  .play-btn{
+    width:58px; height:58px; border-radius:50%; border:1px solid var(--ink-dim);
+    background:rgba(11,12,10,.5); display:flex; align-items:center; justify-content:center;
+    transition:border-color .3s, transform .3s var(--ease);
+  }
+  .frame:hover .play-btn{ border-color:var(--orange); transform:scale(1.08); }
+  .play-btn svg{ width:16px; height:16px; fill:var(--ink); margin-left:3px; }
+  .frame iframe{ width:100%; height:100%; border:none; }
+
+  /* ===================== LIGHTBOX (foto a pantalla completa) ===================== */
+  .lightbox{
+    position:fixed; inset:0; z-index:200; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(5,5,4,.94); padding:6vh 5vw;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox img{ max-width:100%; max-height:100%; object-fit:contain; box-shadow:0 0 80px rgba(0,0,0,.6); }
+  .lightbox-close{
+    position:absolute; top:24px; right:28px; width:44px; height:44px; border-radius:50%;
+    border:1px solid var(--ink-dim); background:rgba(11,12,10,.6); color:var(--ink);
+    font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+  }
+  .lightbox-close:hover{ border-color:var(--orange); }
+
+
+  /* ===================== SOBRE MÍ ===================== */
+  .about-grid{
+    display:grid; grid-template-columns:1fr; gap:50px;
+  }
+  @media (min-width:900px){ .about-grid{ grid-template-columns:2fr 1fr; } }
+  .about-text{
+    font-size:clamp(1.3rem,2.3vw,1.9rem); font-weight:300; line-height:1.55; color:#e7e5df;
+  }
+  .about-text span{ color:var(--orange); font-family:var(--mono); font-size:.6em; }
+  .credits{ display:flex; flex-direction:column; gap:0; }
+  .credits .row{
+    display:flex; justify-content:space-between; padding:14px 0;
+    border-bottom:1px solid var(--rule); font-family:var(--mono); font-size:.78rem;
+    letter-spacing:1px; text-transform:uppercase;
+  }
+  .credits .row span:last-child{ color:var(--ink-dim); }
+
+  /* ===================== CONTACTO ===================== */
+  .contact-prompt{
+    font-family:var(--display); font-weight:400; text-transform:uppercase;
+    font-size:clamp(2rem,6.5vw,4.5rem); letter-spacing:1px; line-height:1.05; max-width:900px;
+  }
+  .contact-prompt a{
+    border-bottom:2px solid var(--orange); transition:opacity .3s;
+  }
+  .contact-prompt a:hover{ opacity:.75; }
+
+  .reel-links{ margin-top:60px; display:flex; flex-direction:column; max-width:420px; }
+  .reel-links a{
+    display:flex; justify-content:space-between; padding:16px 0;
+    border-top:1px solid var(--rule); font-family:var(--mono); font-size:.85rem;
+    letter-spacing:1px; text-transform:uppercase; color:var(--ink-dim);
+  }
+  .reel-links a:last-child{ border-bottom:1px solid var(--rule); }
+  .reel-links a:hover{ color:var(--ink); }
+  .reel-links a .n{ color:var(--orange); margin-right:14px; }
+
+  footer{
+    padding:40px 6% 60px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:var(--mono); font-size:.7rem; color:var(--ink-dim); letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  @media (min-width:1100px){ footer{ padding:40px calc(6% + var(--rail-w)) 60px; } }
+
+  /* ===================== REVEAL ===================== */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @keyframes blink{ 0%,100%{opacity:.25;} 50%{opacity:1;} }
+  @keyframes pulse{ 0%,100%{opacity:.3;} 50%{opacity:1;} }
+
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; transition:none !important; }
+    .reveal{ opacity:1; transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="rail left" aria-hidden="true"></div>
+<div class="rail right" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header>
+    <div class="logo">Natalia Pericás López</div>
+    <div class="timecode"><span class="dot"></span><span id="tc">00:00:00:00</span> REC</div>
+    <nav>
+      <a href="#trabajos" class="active">Trabajos</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Dirección de fotografía · Filmmaking</div>
+    <h1>Natalia<br><span class="dim">Pericás López</span></h1>
+    <div class="role">Filmmaker — Directora de fotografía — España</div>
+    <div class="viewfinder">
+      <span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span>
+    </div>
+    <div class="scroll-cue">Ver la bobina</div>
+  </section>
+
+  <section id="trabajos">
+    <div class="section-head reveal">
+      <h2>Trabajos</h2>
+      <span class="count">05 REELS</span>
+    </div>
+
+    <div class="grid video-grid">
+
+      <div class="frame frame-video reveal" data-video="HlRr5yLSx0w" data-provider="youtube">
+        <div class="video-facade">
+          <button class="play-btn" aria-label="Reproducir Showreel 2026">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <span class="reel-tag">REEL 01</span>
+        <span class="reel-meta">4K</span>
+        <div class="frame-caption">
+          <div class="t">Showreel 2026</div>
+          <div class="c">Dirección / Edición</div>
+        </div>
+      </div>
+
+      <div class="frame frame-video reveal" data-video="wrUwQeJ8LSo" data-start="243" data-provider="youtube">
+        <div class="video-facade">
+          <button class="play-btn" aria-label='Reproducir cortometraje Raíces'>
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <span class="reel-tag">REEL 02</span>
+        <span class="reel-meta">4K</span>
+        <div class="frame-caption">
+          <div class="t">Cortometraje «Raíces»</div>
+          <div class="c">Cinematografía</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid photo-grid">
+
+      <div class="frame frame-photo-tall reveal">
+        <img src="img/frutas-cristobal.jpg" alt="Puesto de fruta y verdura Frutas Cristóbal, fotografía callejera nocturna">
+        <span class="expand-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></span>
+        <span class="reel-tag">REEL 03</span>
+        <span class="reel-meta">STREET</span>
+        <div class="frame-caption">
+          <div class="t">Frutas Cristóbal</div>
+          <div class="c">Street Photography</div>
+        </div>
+      </div>
+
+      <div class="frame frame-photo-wide reveal">
+        <img src="img/paseo-maritimo.jpg" alt="Hombre paseando junto al mar entre palmeras">
+        <span class="expand-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></span>
+        <span class="reel-tag">REEL 04</span>
+        <span class="reel-meta">STREET</span>
+        <div class="frame-caption">
+          <div class="t">Paseo marítimo</div>
+          <div class="c">Street Photography</div>
+        </div>
+      </div>
+
+      <div class="frame frame-photo-wide reveal">
+        <img src="img/estanque.jpg" alt="Patos y fochas nadando en un estanque">
+        <span class="expand-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></span>
+        <span class="reel-tag">REEL 05</span>
+        <span class="reel-meta">STREET</span>
+        <div class="frame-caption">
+          <div class="t">El estanque</div>
+          <div class="c">Street Photography</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="sobre-mi">
+    <div class="section-head reveal">
+      <h2>Sobre mí</h2>
+      <span class="count">FICHA TÉCNICA</span>
+    </div>
+    <div class="about-grid">
+      <p class="about-text reveal">
+        Antes de rodar, escucho: la luz del lugar, el ritmo de quien tengo delante,
+        lo que la historia necesita y lo que no. <span>[ 00:12 ]</span>
+        Llevo esa escucha al montaje y a la corrección de color, donde cada plano
+        encuentra su temperatura exacta. Trabajo entre el cine y la fotografía fija,
+        siempre desde España, con equipos pequeños y procesos cuidados.
+      </p>
+      <div class="credits reveal">
+        <div class="row"><span>Dirección</span><span>2019 — hoy</span></div>
+        <div class="row"><span>Fotografía</span><span>2017 — hoy</span></div>
+        <div class="row"><span>Montaje</span><span>2019 — hoy</span></div>
+        <div class="row"><span>Corrección de color</span><span>2021 — hoy</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto">
+    <div class="section-head reveal">
+      <h2>Contacto</h2>
+      <span class="count">DISPONIBLE PARA PROYECTOS</span>
+    </div>
+    <div class="contact-prompt reveal">
+      ¿Rodamos? Escribe a <a href="mailto:correo@sunombre.com">correo@sunombre.com</a>
+    </div>
+    <div class="reel-links reveal">
+      <a href="#" target="_blank" rel="noopener"><span><span class="n">01</span>Instagram</span><span>→</span></a>
+      <a href="#" target="_blank" rel="noopener"><span><span class="n">02</span>Vimeo</span><span>→</span></a>
+      <a href="#" target="_blank" rel="noopener"><span><span class="n">03</span>LinkedIn</span><span>→</span></a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Escena 01 — Toma 01 — © 2026</span>
+    <span>Rodado en España</span>
+  </footer>
+
+</div>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" aria-label="Cerrar">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  // Contador de timecode estilo cámara (decorativo)
+  (function(){
+    const el = document.getElementById('tc');
+    if(!el) return;
+    let frames = 0;
+    setInterval(()=>{
+      frames++;
+      const f = frames % 24;
+      const totalSec = Math.floor(frames/24);
+      const s = totalSec % 60;
+      const m = Math.floor(totalSec/60) % 60;
+      const h = Math.floor(totalSec/3600);
+      const pad = n => String(n).padStart(2,'0');
+      el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
+    }, 1000/24);
+  })();
+
+  // Revelado al hacer scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:.15 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Fachada de vídeo: click para cargar el iframe real
+  document.querySelectorAll('.frame[data-video]').forEach(frame=>{
+    frame.querySelector('.play-btn').addEventListener('click', ()=>{
+      const id = frame.dataset.video, provider = frame.dataset.provider, start = frame.dataset.start;
+      const src = provider === 'youtube'
+        ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${start ? '&start='+start : ''}`
+        : `https://player.vimeo.com/video/${id}?autoplay=1&color=ff6b35&title=0&byline=0&portrait=0`;
+      frame.innerHTML = `<iframe src="${src}" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
+    });
+  });
+
+  // Lightbox: abrir foto a pantalla completa
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  function openLightbox(src, alt){
+    lightboxImg.src = src; lightboxImg.alt = alt || '';
+    lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true');
+    lightboxImg.src = ''; document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.frame-photo-wide, .frame-photo-tall').forEach(frame=>{
+    frame.addEventListener('click', ()=>{
+      const img = frame.querySelector('img');
+      openLightbox(img.src, img.alt);
+    });
+  });
+  lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); });
+  document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLightbox(); });
+
+  // Nav activo según sección visible
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('nav a');
+  const navIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.toggle('active', l.getAttribute('href') === '#'+e.target.id));
+      }
+    });
+  }, { threshold:.4 });
+  sections.forEach(s=>navIo.observe(s));
+</script>
+</body>
+</html>
