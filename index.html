@@ -216,9 +216,27 @@
   }
 
   /* fachada de vídeo (click-to-play) */
+  /* fachada de vídeo (click-to-play) */
   .video-facade{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(circle at 50% 40%, #1c1d17, #0b0c0a 75%);
+    background-color: var(--bg); /* Color de fondo por si la imagen tarda un segundo en cargar */
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Velo oscuro para asegurar el contraste del botón y el texto */
+  .video-facade::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: rgba(11, 12, 10, 0.35);
+    z-index: 1;
+  }
+
+  .play-btn{
+    position: relative; z-index: 2; /* Para que quede por encima del velo oscuro */
+    width:58px; height:58px; border-radius:50%; border:1px solid var(--ink-dim);
+    background:rgba(11,12,10,.5); display:flex; align-items:center; justify-content:center;
+    transition:border-color .3s, transform .3s var(--ease);
   }
   .play-btn{
     width:58px; height:58px; border-radius:50%; border:1px solid var(--ink-dim);
