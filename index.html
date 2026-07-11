@@ -495,13 +495,25 @@
   }, { threshold:.15 });
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  // Fachada de vídeo: click para cargar el iframe real
+  // Fachada de vídeo: cargar miniatura y click para inyectar iframe real
   document.querySelectorAll('.frame[data-video]').forEach(frame=>{
+    const id = frame.dataset.video;
+    const provider = frame.dataset.provider;
+    const facade = frame.querySelector('.video-facade');
+
+    // 1. Cargar la miniatura automáticamente al inicio
+    if (facade && provider === 'youtube') {
+      // Usamos maxresdefault.jpg para obtener la miniatura en máxima resolución
+      facade.style.backgroundImage = `url('https://img.youtube.com/vi/${id}/maxresdefault.jpg')`;
+    }
+
+    // 2. Comportamiento al hacer clic en Play
     frame.querySelector('.play-btn').addEventListener('click', ()=>{
-      const id = frame.dataset.video, provider = frame.dataset.provider, start = frame.dataset.start;
+      const start = frame.dataset.start;
       const src = provider === 'youtube'
         ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${start ? '&start='+start : ''}`
         : `https://player.vimeo.com/video/${id}?autoplay=1&color=ff6b35&title=0&byline=0&portrait=0`;
+      
       frame.innerHTML = `<iframe src="${src}" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
     });
   });
